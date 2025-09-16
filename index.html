@@ -79,19 +79,29 @@ document.getElementById("download").addEventListener("click", () => {
   ctx.fillStyle = document.getElementById("color").value;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // Text
-  ctx.fillStyle = "white";
-  ctx.font = "600 64px 'Poppins', sans-serif";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "alphabetic";
+// Text
+ctx.fillStyle = "white";
 
-  const metrics = ctx.measureText(displayText);
-  const ascent = metrics.actualBoundingBoxAscent || 0;
+// Start with a font size relative to canvas
+let fontSize = canvas.width * 0.5;
+ctx.font = `600 ${fontSize}px 'Poppins', sans-serif`;
 
-  // Optical centering: ignore descender
-  const y = (canvas.height + ascent) / 2;
+// Reduce font size until text fits nicely
+let metrics = ctx.measureText(displayText);
+while (metrics.width > canvas.width * 0.8) { // keep padding on sides
+  fontSize -= 2;
+  ctx.font = `600 ${fontSize}px 'Poppins', sans-serif`;
+  metrics = ctx.measureText(displayText);
+}
 
-  ctx.fillText(displayText, canvas.width / 2, y);
+ctx.textAlign = "center";
+ctx.textBaseline = "alphabetic";
+
+const ascent = metrics.actualBoundingBoxAscent || fontSize * 0.8;
+// Center vertically using ascent only (ignores descenders)
+const y = (canvas.height + ascent) / 2;
+
+ctx.fillText(displayText, canvas.width / 2, y);
 
   // Download
   const link = document.createElement("a");
