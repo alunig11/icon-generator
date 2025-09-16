@@ -75,20 +75,25 @@ document.getElementById("download").addEventListener("click", () => {
   const fullText = document.getElementById("text").value.trim() || "icon";
   const displayText = fullText.substring(0, 2);
 
+  // Background
   ctx.fillStyle = document.getElementById("color").value;
-  ctx.fillRect(0, 0, 128, 128);
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+  // Text
   ctx.fillStyle = "white";
   ctx.font = "600 64px 'Poppins', sans-serif";
   ctx.textAlign = "center";
   ctx.textBaseline = "alphabetic";
 
   const metrics = ctx.measureText(displayText);
-  const actualHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
-  const y = (canvas.height - actualHeight) / 2 + metrics.actualBoundingBoxAscent;
+  const ascent = metrics.actualBoundingBoxAscent || 0;
+
+  // Optical centering: ignore descender
+  const y = (canvas.height + ascent) / 2;
 
   ctx.fillText(displayText, canvas.width / 2, y);
 
+  // Download
   const link = document.createElement("a");
   link.download = fullText + ".png"; 
   link.href = canvas.toDataURL("image/png");
