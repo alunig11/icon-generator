@@ -4,127 +4,67 @@
   <meta charset="UTF-8">
   <title>Custom Icon Generator</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Poppins font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
   <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      font-size: 14px;
+      height: 100vh; /* full height */
+      margin: 0;
+    }
+    .card {
+      max-width: 360px;
+      border-radius: 12px;
+    }
     #preview {
-      width: 128px;
-      height: 128px;
+      width: 96px;
+      height: 96px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 48px;
+      font-size: 36px;
       font-weight: 600;
-      font-family: 'Poppins', sans-serif;
       color: white;
-      border-radius: 16px;
-      margin-top: 1rem;
+      border-radius: 12px;
+      margin: 1rem auto;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    button {
+      font-size: 14px;
     }
   </style>
 </head>
-<body class="bg-light">
-<div class="container py-4">
-  <h1 class="mb-4">Custom Icon Generator</h1>
+<body class="bg-light d-flex align-items-center justify-content-center">
+  <div class="card shadow-sm p-3">
+    <h5 class="mb-3 text-center">Custom Icon Generator</h5>
 
-  <div class="mb-3">
-    <label for="website" class="form-label">Website URL</label>
-    <input type="text" id="website" class="form-control" placeholder="e.g. example.com">
+    <div class="mb-2">
+      <label for="text" class="form-label small mb-1">Website / App Name</label>
+      <input type="text" id="text" class="form-control form-control-sm" placeholder="e.g. Reddit">
+    </div>
+
+    <div class="mb-2">
+      <label for="color" class="form-label small mb-1">Background Color</label>
+      <input type="color" id="color" class="form-control form-control-color" value="#007bff">
+    </div>
+
+    <div id="preview">Re</div>
+
+    <div class="d-flex justify-content-center gap-2">
+      <button id="download" class="btn btn-success btn-sm">Download</button>
+    </div>
   </div>
-
-  <div class="mb-3">
-    <label for="text" class="form-label">Website / App Name</label>
-    <input type="text" id="text" class="form-control" placeholder="e.g. Reddit">
-  </div>
-
-  <div class="mb-3">
-    <label for="color" class="form-label">Background Color</label>
-    <input type="color" id="color" class="form-control form-control-color" value="#007bff">
-  </div>
-
-  <button id="fetchColor" class="btn btn-primary">Fetch Color from Website</button>
-  <button id="download" class="btn btn-success">Download Icon</button>
-
-  <div id="preview" class="shadow-sm">Re</div>
-</div>
 
 <script>
-function getDominantColor(imgUrl, callback) {
-  const img = new Image();
-  img.crossOrigin = "Anonymous";
-  img.src = imgUrl;
-
-  img.onload = function() {
-    if (img.width === 0 || img.height === 0) {
-      callback(null);
-      return;
-    }
-
-    const canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
-
-    try {
-      const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-      let r = 0, g = 0, b = 0, count = 0;
-
-      for (let i = 0; i < data.length; i += 4) {
-        r += data[i];
-        g += data[i + 1];
-        b += data[i + 2];
-        count++;
-      }
-
-      callback(`rgb(${Math.floor(r / count)}, ${Math.floor(g / count)}, ${Math.floor(b / count)})`);
-    } catch (e) {
-      callback(null);
-    }
-  };
-
-  img.onerror = function() {
-    callback(null);
-  };
-}
-
 function updatePreview() {
   const preview = document.getElementById("preview");
   const fullText = document.getElementById("text").value.trim();
-  preview.textContent = fullText.substring(0, 2); // only first 2 chars
+  preview.textContent = fullText.substring(0, 2); 
   preview.style.backgroundColor = document.getElementById("color").value;
 }
 
 document.getElementById("text").addEventListener("input", updatePreview);
 document.getElementById("color").addEventListener("input", updatePreview);
-
-document.getElementById("fetchColor").addEventListener("click", () => {
-  let domain = document.getElementById("website").value.trim();
-  if (!domain) return alert("Enter a website URL.");
-
-  if (!domain.startsWith("http")) {
-    domain = "https://" + domain;
-  }
-
-  const faviconUrl = domain + "/favicon.ico";
-
-  getDominantColor(faviconUrl, (color) => {
-    if (!color) {
-      const clearbitUrl = "https://logo.clearbit.com/" + new URL(domain).hostname;
-      getDominantColor(clearbitUrl, (cbColor) => {
-        if (cbColor) {
-          document.getElementById("color").value = rgbToHex(cbColor);
-          updatePreview();
-        } else {
-          alert("Failed to fetch color. Please choose manually.");
-        }
-      });
-    } else {
-      document.getElementById("color").value = rgbToHex(color);
-      updatePreview();
-    }
-  });
-});
 
 document.getElementById("download").addEventListener("click", () => {
   const canvas = document.createElement("canvas");
@@ -140,28 +80,20 @@ document.getElementById("download").addEventListener("click", () => {
 
   ctx.fillStyle = "white";
   ctx.font = "600 64px 'Poppins', sans-serif";
-ctx.textAlign = "center";
-ctx.textBaseline = "alphabetic";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "alphabetic";
 
-const metrics = ctx.measureText(displayText);
-const actualHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
-const y = (canvas.height - actualHeight) / 2 + metrics.actualBoundingBoxAscent;
+  const metrics = ctx.measureText(displayText);
+  const actualHeight = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+  const y = (canvas.height - actualHeight) / 2 + metrics.actualBoundingBoxAscent;
 
-ctx.fillText(displayText, canvas.width / 2, y);
+  ctx.fillText(displayText, canvas.width / 2, y);
 
   const link = document.createElement("a");
-  link.download = fullText + ".png"; // use full text as filename
+  link.download = fullText + ".png"; 
   link.href = canvas.toDataURL("image/png");
   link.click();
 });
-
-function rgbToHex(rgb) {
-  const result = rgb.match(/\d+/g);
-  if (!result) return "#007bff";
-  return "#" + result.slice(0, 3).map(x =>
-    ("0" + parseInt(x).toString(16)).slice(-2)
-  ).join("");
-}
 
 updatePreview();
 </script>
