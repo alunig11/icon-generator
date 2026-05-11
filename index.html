@@ -7,11 +7,16 @@
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@500;700&display=swap" rel="stylesheet">
 
   <style>
+    /* Note: 'Google Sans' is a proprietary font. For this web-tool, we use a 
+       standard high-quality sans-serif stack that mimics the Google Sans geometry. */
+    :root {
+      --font-main: "Google Sans", "Open Sans", "Segoe UI", Roboto, Arial, sans-serif;
+    }
+
     body {
       height: 100vh;
       margin: 0;
@@ -19,7 +24,7 @@
       align-items: center;
       justify-content: center;
       background-color: #f8f9fa;
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: var(--font-main);
       color: #1c1e21;
       padding: 15px;
     }
@@ -31,6 +36,7 @@
       border: 1px solid #dee2e6;
       width: 100%;
       max-width: 450px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
 
     .section-title {
@@ -40,28 +46,29 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      letter-spacing: -0.5px;
     }
 
     .form-label {
-      font-weight: 600;
-      color: #6c757d;
+      font-weight: 700;
+      color: #5f6368;
       font-size: 0.75rem;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.4rem;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
+      letter-spacing: 0.5px;
     }
 
     .form-control {
       border-radius: 8px;
       padding: 12px;
-      border: 1px solid #ced4da;
+      border: 1px solid #dadce0;
       font-size: 0.95rem;
+      font-family: var(--font-main);
     }
 
-    /* Icon Preview Container - similar to your peso-display */
     .icon-preview-box {
-      background-color: #f0f7ff;
-      border: 1px solid #cfe2ff;
+      background-color: #f8f9fa;
+      border: 1px solid #dadce0;
       border-radius: 12px;
       padding: 30px;
       display: flex;
@@ -73,36 +80,31 @@
     }
 
     #preview {
-      width: 100px;
-      height: 100px;
+      width: 128px;
+      height: 128px;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
-      font-weight: 700;
-      font-size: 2.5rem;
-      border-radius: 16px;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-      transition: all 0.3s ease;
-      text-transform: uppercase;
+      font-family: var(--font-main);
+      font-weight: 500;
+      font-size: clamp(2.2rem, 8vw, 3.2rem);
+      border-radius: 24px; /* Slightly rounder 'Google' style radius */
+      box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .btn-primary {
-      background-color: #0070ba;
+      background-color: #1a73e8; /* Google Blue */
       border: none;
       padding: 12px;
-      font-weight: 600;
+      font-weight: 500;
       border-radius: 8px;
-      transition: all 0.2s;
+      transition: background 0.2s;
     }
 
     .btn-primary:hover {
-      background-color: #003087;
-      transform: translateY(-1px);
-    }
-
-    .btn-primary:active {
-      transform: scale(0.98);
+      background-color: #174ea6;
     }
 
     .color-input-wrapper {
@@ -111,7 +113,7 @@
       padding: 0;
       border: none;
       overflow: hidden;
-      border-radius: 8px;
+      border-radius: 50%; /* Circle picker to match Google UI */
       cursor: pointer;
     }
 
@@ -124,45 +126,45 @@
     }
 
     .input-group-text {
-      background-color: #f8f9fa;
-      border-color: #ced4da;
-      color: #6c757d;
+      background-color: #f1f3f4;
+      border-color: #dadce0;
+      color: #5f6368;
     }
   </style>
 </head>
 <body>
 
   <div class="tool-card">
-    <h4 class="section-title"><i class="fa-solid fa-shapes me-2"></i> Icon Generator</h4>
+    <h4 class="section-title"><i class="fa-solid fa-circle-dot me-2"></i> Icon Generator</h4>
     
     <div class="mb-4">
       <label class="form-label">Reference Name</label>
       <div class="input-group">
-        <span class="input-group-text"><i class="fa-solid fa-font"></i></span>
-        <input type="text" id="text" class="form-control" placeholder="e.g. Uber, Zus" maxlength="15">
+        <span class="input-group-text"><i class="fa-solid fa-signature"></i></span>
+        <input type="text" id="text" class="form-control" placeholder="e.g. Google, GOMO" maxlength="15">
       </div>
     </div>
 
     <div class="mb-4">
-      <label class="form-label">Brand Color</label>
-      <div class="d-flex align-items: center; gap: 10px;">
+      <label class="form-label">Accent Color</label>
+      <div class="d-flex align-items-center gap-3">
         <div class="color-input-wrapper shadow-sm border">
-          <input type="color" id="color" value="#0070ba">
+          <input type="color" id="color" value="#1a73e8">
         </div>
-        <input type="text" id="hexText" class="form-control" value="#0070ba" readonly style="background: #f8f9fa;">
+        <input type="text" id="hexText" class="form-control" value="#1A73E8" readonly style="background: #f1f3f4; width: 110px; font-weight: 500;">
       </div>
     </div>
     
     <div class="mb-4">
-      <label class="form-label">Asset Preview</label>
+      <label class="form-label">Icon Preview</label>
       <div class="icon-preview-box">
         <div id="preview">Ab</div>
-        <div class="text-muted small mt-3">128x128 Logic Output</div>
+        <div class="text-muted small mt-3" style="font-weight: 500;">128x128 Adaptive Asset</div>
       </div>
     </div>
 
     <button id="download" class="btn btn-primary w-100">
-      <i class="fa-solid fa-download me-2"></i> Download Asset
+      <i class="fa-solid fa-cloud-arrow-down me-2"></i> Export PNG
     </button>
   </div>
 
@@ -170,10 +172,9 @@
     function updatePreview() {
       const preview = document.getElementById("preview");
       const hexText = document.getElementById("hexText");
-      const fullText = document.getElementById("text").value.trim();
+      const rawText = document.getElementById("text").value.trim();
       
-      // Grabs first two letters
-      const displayText = fullText.substring(0, 2) || "Ab";
+      const displayText = rawText.substring(0, 2) || "Ab";
       const colorValue = document.getElementById("color").value;
 
       preview.textContent = displayText; 
@@ -190,8 +191,8 @@
       canvas.height = 128;
       const ctx = canvas.getContext("2d");
 
-      const fullText = document.getElementById("text").value.trim() || "icon";
-      const displayText = fullText.substring(0, 2).toUpperCase();
+      const rawText = document.getElementById("text").value.trim() || "Ab";
+      const displayText = rawText.substring(0, 2);
 
       // Background
       ctx.fillStyle = document.getElementById("color").value;
@@ -199,22 +200,29 @@
 
       // Text
       ctx.fillStyle = "white";
-      let fontSize = canvas.width * 0.5;
-      // Using System font stack if Jakarta isn't loaded in canvas
-      ctx.font = `bold ${fontSize}px 'Plus Jakarta Sans', sans-serif`;
+      let fontSize = canvas.width * 0.52;
+      
+      // Using Medium weight (500) for Google Sans feel
+      ctx.font = `500 ${fontSize}px var(--font-main)`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
-      ctx.fillText(displayText, canvas.width / 2, canvas.height / 2 + 2);
+      // Re-apply scaling logic for longer strings (like "Ww")
+      let metrics = ctx.measureText(displayText);
+      while (metrics.width > canvas.width * 0.82) {
+        fontSize -= 2;
+        ctx.font = `500 ${fontSize}px var(--font-main)`;
+        metrics = ctx.measureText(displayText);
+      }
 
-      // Download
+      ctx.fillText(displayText, canvas.width / 2, canvas.height / 2 + 3);
+
       const link = document.createElement("a");
-      link.download = fullText.toLowerCase().replace(/\s+/g, '-') + "-icon.png"; 
+      link.download = (rawText || "icon") + ".png"; 
       link.href = canvas.toDataURL("image/png");
       link.click();
     });
 
-    // Initialize
     updatePreview();
   </script>
 
