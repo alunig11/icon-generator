@@ -3,121 +3,220 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Icon Generator</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet">
+  <title>Icon Generator | v1.0</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <style>
-    #preview {
-      font-family: 'Poppins', sans-serif;
+    body {
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f8f9fa;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #1c1e21;
+      padding: 15px;
+    }
+
+    .tool-card {
+      background: #ffffff;
+      padding: 32px;
+      border-radius: 12px;
+      border: 1px solid #dee2e6;
+      width: 100%;
+      max-width: 450px;
+    }
+
+    .section-title {
+      font-weight: 700;
+      color: #003087;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .form-label {
       font-weight: 600;
-      font-size: clamp(2rem, 8vw, 3rem);
+      color: #6c757d;
+      font-size: 0.75rem;
+      margin-bottom: 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .form-control {
+      border-radius: 8px;
+      padding: 12px;
+      border: 1px solid #ced4da;
+      font-size: 0.95rem;
+    }
+
+    /* Icon Preview Container - similar to your peso-display */
+    .icon-preview-box {
+      background-color: #f0f7ff;
+      border: 1px solid #cfe2ff;
+      border-radius: 12px;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 10px;
+      border-style: dashed;
+    }
+
+    #preview {
+      width: 100px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+    }
+
+    .btn-primary {
+      background-color: #0070ba;
+      border: none;
+      padding: 12px;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+      background-color: #003087;
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+
+    .color-input-wrapper {
+      width: 45px;
+      height: 45px;
+      padding: 0;
+      border: none;
+      overflow: hidden;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #color {
+      border: none;
+      width: 150%;
+      height: 150%;
+      margin: -25%;
+      cursor: pointer;
+    }
+
+    .input-group-text {
+      background-color: #f8f9fa;
+      border-color: #ced4da;
+      color: #6c757d;
     }
   </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col items-center justify-center font-sans px-6">
+<body>
 
-  <!-- Header -->
-  <h1 class="text-4xl font-bold text-gray-900 mb-10 tracking-tight text-center">
-    Icon Generator
-  </h1>
-
-  <!-- Inputs inline -->
-  <div class="flex w-full max-w-md gap-4 mb-8 items-center">
-    <input 
-      type="text" 
-      id="text" 
-      placeholder="Enter text here"
-      class="flex-grow px-6 py-4 rounded-full border border-gray-300 text-gray-800 
-             focus:ring-4 focus:ring-indigo-400 focus:border-indigo-500 outline-none
-             text-xl shadow-sm bg-white"
-    >
-
-    <!-- Circle color picker -->
-    <div class="relative">
-      <input 
-        type="color" 
-        id="color" 
-        value="#007bff"
-        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer rounded-full"
-      >
-      <div id="colorCircle" 
-           class="w-14 h-14 rounded-full shadow-sm border border-gray-300">
+  <div class="tool-card">
+    <h4 class="section-title"><i class="fa-solid fa-shapes me-2"></i> Icon Generator</h4>
+    
+    <div class="mb-4">
+      <label class="form-label">Reference Name</label>
+      <div class="input-group">
+        <span class="input-group-text"><i class="fa-solid fa-font"></i></span>
+        <input type="text" id="text" class="form-control" placeholder="e.g. Uber, Zus" maxlength="15">
       </div>
     </div>
+
+    <div class="mb-4">
+      <label class="form-label">Brand Color</label>
+      <div class="d-flex align-items: center; gap: 10px;">
+        <div class="color-input-wrapper shadow-sm border">
+          <input type="color" id="color" value="#0070ba">
+        </div>
+        <input type="text" id="hexText" class="form-control" value="#0070ba" readonly style="background: #f8f9fa;">
+      </div>
+    </div>
+    
+    <div class="mb-4">
+      <label class="form-label">Asset Preview</label>
+      <div class="icon-preview-box">
+        <div id="preview">Ab</div>
+        <div class="text-muted small mt-3">128x128 Logic Output</div>
+      </div>
+    </div>
+
+    <button id="download" class="btn btn-primary w-100">
+      <i class="fa-solid fa-download me-2"></i> Download Asset
+    </button>
   </div>
 
-  <!-- Preview -->
-  <div id="preview" 
-       class="flex items-center justify-center 
-              w-32 h-32 text-white rounded-2xl shadow-md mb-8 transition-colors duration-300">
-    Re
-  </div>
+  <script>
+    function updatePreview() {
+      const preview = document.getElementById("preview");
+      const hexText = document.getElementById("hexText");
+      const fullText = document.getElementById("text").value.trim();
+      
+      // Grabs first two letters
+      const displayText = fullText.substring(0, 2) || "Ab";
+      const colorValue = document.getElementById("color").value;
 
-  <!-- Action button -->
-  <button id="download"
-          class="w-full max-w-md py-4 rounded-full text-xl font-semibold 
-                 bg-indigo-600 text-white shadow-sm
-                 hover:bg-indigo-700 active:scale-95 transition">
-    Download
-  </button>
+      preview.textContent = displayText; 
+      preview.style.backgroundColor = colorValue;
+      hexText.value = colorValue.toUpperCase();
+    }
 
-<script>
-function updatePreview() {
-  const preview = document.getElementById("preview");
-  const fullText = document.getElementById("text").value.trim();
-  const displayText = fullText.substring(0, 2) || "Re";
-  const colorValue = document.getElementById("color").value;
+    document.getElementById("text").addEventListener("input", updatePreview);
+    document.getElementById("color").addEventListener("input", updatePreview);
 
-  preview.textContent = displayText; 
-  preview.style.backgroundColor = colorValue;
+    document.getElementById("download").addEventListener("click", () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = 128;
+      canvas.height = 128;
+      const ctx = canvas.getContext("2d");
 
-  // Sync visible circle with color
-  document.getElementById("colorCircle").style.backgroundColor = colorValue;
-}
+      const fullText = document.getElementById("text").value.trim() || "icon";
+      const displayText = fullText.substring(0, 2).toUpperCase();
 
-document.getElementById("text").addEventListener("input", updatePreview);
-document.getElementById("color").addEventListener("input", updatePreview);
+      // Background
+      ctx.fillStyle = document.getElementById("color").value;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-document.getElementById("download").addEventListener("click", () => {
-  const canvas = document.createElement("canvas");
-  canvas.width = 128;
-  canvas.height = 128;
-  const ctx = canvas.getContext("2d");
+      // Text
+      ctx.fillStyle = "white";
+      let fontSize = canvas.width * 0.5;
+      // Using System font stack if Jakarta isn't loaded in canvas
+      ctx.font = `bold ${fontSize}px 'Plus Jakarta Sans', sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
 
-  const fullText = document.getElementById("text").value.trim() || "icon";
-  const displayText = fullText.substring(0, 2);
+      ctx.fillText(displayText, canvas.width / 2, canvas.height / 2 + 2);
 
-  // Background
-  ctx.fillStyle = document.getElementById("color").value;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // Download
+      const link = document.createElement("a");
+      link.download = fullText.toLowerCase().replace(/\s+/g, '-') + "-icon.png"; 
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    });
 
-  // Text
-  ctx.fillStyle = "white";
-  let fontSize = canvas.width * 0.5;
-  ctx.font = `600 ${fontSize}px 'Poppins', sans-serif`;
-  let metrics = ctx.measureText(displayText);
+    // Initialize
+    updatePreview();
+  </script>
 
-  while (metrics.width > canvas.width * 0.8) {
-    fontSize -= 2;
-    ctx.font = `600 ${fontSize}px 'Poppins', sans-serif`;
-    metrics = ctx.measureText(displayText);
-  }
-
-  ctx.textAlign = "center";
-  ctx.textBaseline = "alphabetic";
-  const ascent = metrics.actualBoundingBoxAscent || fontSize * 0.8;
-  const y = (canvas.height + ascent) / 2;
-
-  ctx.fillText(displayText, canvas.width / 2, y);
-
-  // Download
-  const link = document.createElement("a");
-  link.download = fullText + ".png"; 
-  link.href = canvas.toDataURL("image/png");
-  link.click();
-});
-
-updatePreview();
-</script>
 </body>
 </html>
