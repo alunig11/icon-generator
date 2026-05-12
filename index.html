@@ -3,19 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Icon Generator | v1.0</title>
+  <title>Icon Generator | v1.1</title>
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --font-main: "Google Sans", "Open Sans", "Segoe UI", Roboto, Arial, sans-serif;
+      --font-main: "Google Sans", "Segoe UI", Roboto, Arial, sans-serif;
     }
 
     body {
@@ -37,16 +33,14 @@
       border: 1px solid #dee2e6;
       width: 100%;
       max-width: 450px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
 
     .section-title {
       font-weight: 700;
       color: #003087;
       margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      letter-spacing: -0.5px;
+      text-align: center;
     }
 
     .form-label {
@@ -55,15 +49,6 @@
       font-size: 0.75rem;
       margin-bottom: 0.4rem;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .form-control {
-      border-radius: 8px;
-      padding: 12px;
-      border: 1px solid #dadce0;
-      font-size: 0.95rem;
-      font-family: var(--font-main);
     }
 
     .icon-preview-box {
@@ -76,7 +61,6 @@
       align-items: center;
       justify-content: center;
       margin-top: 10px;
-      border-style: dashed;
     }
 
     #preview {
@@ -86,12 +70,9 @@
       align-items: center;
       justify-content: center;
       color: white;
-      font-family: var(--font-main);
-      font-weight: 500;
-      font-size: clamp(2.2rem, 8vw, 3.2rem);
-      border-radius: 24px;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.08);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      font-weight: 700;
+      font-size: 4rem; /* Visual preview size */
+      transition: background 0.2s;
     }
 
     .btn-primary {
@@ -100,20 +81,13 @@
       padding: 12px;
       font-weight: 500;
       border-radius: 8px;
-      transition: background 0.2s;
-    }
-
-    .btn-primary:hover {
-      background-color: #174ea6;
     }
 
     .color-input-wrapper {
       width: 45px;
       height: 45px;
-      padding: 0;
-      border: none;
-      overflow: hidden;
       border-radius: 50%;
+      overflow: hidden;
       cursor: pointer;
     }
 
@@ -124,109 +98,99 @@
       margin: -25%;
       cursor: pointer;
     }
-
-    .input-group-text {
-      background-color: #f1f3f4;
-      border-color: #dadce0;
-      color: #5f6368;
-    }
   </style>
 </head>
 <body>
 
   <div class="tool-card">
-    <h4 class="section-title"><i class="fa-solid fa-circle-dot me-2"></i> Icon Generator</h4>
+    <h4 class="section-title">Icon Generator</h4>
 
     <div class="mb-4">
       <label class="form-label">Reference Name</label>
-      <div class="input-group">
-        <span class="input-group-text"><i class="fa-solid fa-signature"></i></span>
-        <input type="text" id="text" class="form-control" placeholder="e.g. Google, GOMO" maxlength="15">
-      </div>
+      <input type="text" id="text" class="form-control" placeholder="Enter name..." maxlength="15">
     </div>
 
     <div class="mb-4">
       <label class="form-label">Accent Color</label>
       <div class="d-flex align-items-center gap-3">
-        <div class="color-input-wrapper shadow-sm border">
+        <div class="color-input-wrapper border">
           <input type="color" id="color" value="#1a73e8">
         </div>
-        <input type="text" id="hexText" class="form-control" value="#1A73E8" readonly style="background: #f1f3f4; width: 110px; font-weight: 500;">
+        <input type="text" id="hexText" class="form-control" value="#1A73E8" readonly style="width: 110px;">
       </div>
     </div>
 
     <div class="mb-4">
-      <label class="form-label">Icon Preview</label>
+      <label class="form-label">Preview</label>
       <div class="icon-preview-box">
         <div id="preview">Ab</div>
-        <div class="text-muted small mt-3" style="font-weight: 500;">128x128 Adaptive Asset</div>
       </div>
     </div>
 
-    <button id="download" class="btn btn-primary w-100">
-      <i class="fa-solid fa-cloud-arrow-down me-2"></i> Export PNG
-    </button>
+    <button id="download" class="btn btn-primary w-100">Export PNG</button>
   </div>
 
   <script>
-    function updatePreview() {
-      const preview = document.getElementById("preview");
-      const hexText = document.getElementById("hexText");
-      const rawText = document.getElementById("text").value.trim();
+    const textInput = document.getElementById("text");
+    const colorInput = document.getElementById("color");
+    const preview = document.getElementById("preview");
+    const hexText = document.getElementById("hexText");
 
-      const displayText = rawText.substring(0, 2) || "Ab";
-      const colorValue = document.getElementById("color").value;
-
-      preview.textContent = displayText; 
-      preview.style.backgroundColor = colorValue;
-      hexText.value = colorValue.toUpperCase();
+    function updateUI() {
+      const val = textInput.value.trim();
+      preview.textContent = val.substring(0, 2) || "Ab";
+      preview.style.backgroundColor = colorInput.value;
+      hexText.value = colorInput.value.toUpperCase();
     }
 
-    document.getElementById("text").addEventListener("input", updatePreview);
-    document.getElementById("color").addEventListener("input", updatePreview);
+    textInput.addEventListener("input", updateUI);
+    colorInput.addEventListener("input", updateUI);
 
     document.getElementById("download").addEventListener("click", () => {
+      // High-res canvas for crisp text
       const canvas = document.createElement("canvas");
-      canvas.width = 128;
-      canvas.height = 128;
+      canvas.width = 512;
+      canvas.height = 512;
       const ctx = canvas.getContext("2d");
 
-      // We use the FULL text for the filename
-      const fullFilename = document.getElementById("text").value.trim() || "icon";
-      
-      // We use only the first 2 letters for the icon draw
-      const displayText = fullFilename.substring(0, 2) === "icon" ? "Ab" : fullFilename.substring(0, 2);
+      const fullText = textInput.value.trim() || "icon";
+      const iconText = fullText === "icon" ? "Ab" : fullText.substring(0, 2);
 
-      // Background
-      ctx.fillStyle = document.getElementById("color").value;
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      // Square Background
+      ctx.fillStyle = colorInput.value;
+      ctx.fillRect(0, 0, 512, 512);
 
-      // Text setup
+      // Text Logic
       ctx.fillStyle = "white";
-      let fontSize = canvas.width * 0.52;
-      ctx.font = `500 ${fontSize}px var(--font-main)`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
+      
+      // Start with a large font (approx 60% of canvas height)
+      let fontSize = 300; 
+      ctx.font = `bold ${fontSize}px var(--font-main)`;
 
-      // Scaling logic for the 2-letter text
-      let metrics = ctx.measureText(displayText);
-      while (metrics.width > canvas.width * 0.82) {
-        fontSize -= 2;
-        ctx.font = `500 ${fontSize}px var(--font-main)`;
-        metrics = ctx.measureText(displayText);
+      // Ensure it doesn't hit the edges
+      while (ctx.measureText(iconText).width > 440) {
+        fontSize -= 10;
+        ctx.font = `bold ${fontSize}px var(--font-main)`;
       }
 
-      ctx.fillText(displayText, canvas.width / 2, canvas.height / 2 + 3);
+      ctx.fillText(iconText, 256, 256 + 15); // Slight offset for visual centering
 
-      // Exporting with the full name
+      // Scale down to 128x128 for final file
+      const finalCanvas = document.createElement("canvas");
+      finalCanvas.width = 128;
+      finalCanvas.height = 128;
+      const finalCtx = finalCanvas.getContext("2d");
+      finalCtx.drawImage(canvas, 0, 0, 128, 128);
+
       const link = document.createElement("a");
-      link.download = fullFilename + ".png"; 
-      link.href = canvas.toDataURL("image/png");
+      link.download = fullText + ".png"; 
+      link.href = finalCanvas.toDataURL("image/png");
       link.click();
     });
 
-    updatePreview();
+    updateUI();
   </script>
-
 </body>
 </html>
